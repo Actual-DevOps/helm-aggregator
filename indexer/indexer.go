@@ -11,13 +11,20 @@ func AggregateIndexes(config conf.Config) (map[string]interface{}, error) {
 	aggregatedIndex := make(map[string]interface{})
 	entries := make(map[string]interface{})
 
-	for _, repo := range config.Repos {
+	for i := range config.Repos {
+		repo := &config.Repos[i]
+
 		repo.Lock.Lock()
 
 		if repo.Index != nil {
 			if repoIndexEntries, ok := repo.Index["entries"].(map[interface{}]interface{}); ok {
 				for chart, versions := range repoIndexEntries {
-					entries[fmt.Sprintf("%s/%s", repo.Name, chart.(string))] = versions
+					chart, ok := chart.(string)
+					if !ok {
+						return nil, fmt.Errorf("chart is not a string")
+					}
+
+					entries[fmt.Sprintf("%s/%s", repo.Name, chart)] = versions
 				}
 			}
 		}
