@@ -34,6 +34,7 @@ var runCmd = &cobra.Command{
 		wg.Wait()
 
 		http.HandleFunc("/index.yaml", handlers.IndexHandler(config))
+		http.HandleFunc("/config", handlers.GetConfigHandler(config))
 
 		log.Printf("Server run on port %s\n", config.Port)
 		if err := http.ListenAndServe(":"+config.Port, nil); err != nil {
