@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
 	"sync"
 
 	"github.com/spf13/viper"
@@ -23,9 +24,12 @@ type Config struct {
 }
 
 func LoadConfig(config *Config) error {
-	viper.SetConfigName("config")
+	if os.Getenv("HELM_AGGREGATOR_CONFIG") == "" {
+		os.Setenv("HELM_AGGREGATOR_CONFIG", "config.yaml")
+	}
+
+	viper.SetConfigFile(os.Getenv("HELM_AGGREGATOR_CONFIG"))
 	viper.SetConfigType("yaml")
-	viper.AddConfigPath(".")
 
 	if err := viper.ReadInConfig(); err != nil {
 		return fmt.Errorf("configuration read error: %v", err)
