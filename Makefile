@@ -1,27 +1,31 @@
-.PHONY: all build push build_app
+.PHONY: all push_image build_image
 
 APP=helm-aggregator
-GROUP=Actual-DevOps
+GROUP=actual-devops
 VERSION=0.1.0
 DOCKER_REGISTRY=ghcr.io
-
+GOLANG_VERSION=1.23.5
 
 all:
-	@echo 'DEFAULT:                                                               '
-	@echo '   make build_app                                                      '
+	@echo 'DEFAULT:                                                         '
+	@echo '   make build_image                                              '
 	@echo '   make build                                                    '
-	@echo '   make push                                                           '
+	@echo '   make push_image                                               '
 
-build_app:
+lint:
 	golangci-lint run -v
-	go mod vendor
-	GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o helm-aggregator
 
 build:
+	go mod download
+	GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o helm-aggregator
+
+build_image:
 	@echo 'Build Docker'
-	docker buildx build --platform linux/amd64 -t $(DOCKER_REGISTRY)/$(GROUP)/$(APP):$(VERSION) .
+	docker buildx build --build-arg GOLANG_VERSION=$(GOLANG_VERSION) \
+						--platform linux/amd64 \
+						-t $(DOCKER_REGISTRY)/$(GROUP)/$(APP):$(VERSION) .
 	docker tag $(DOCKER_REGISTRY)/$(GROUP)/$(APP):$(VERSION) $(DOCKER_REGISTRY)/$(GROUP)/$(APP):latest
 
-push:
+push_image:
 	docker push $(DOCKER_REGISTRY)/$(GROUP)/$(APP):$(VERSION)
 	docker push $(DOCKER_REGISTRY)/$(GROUP)/$(APP):latest
