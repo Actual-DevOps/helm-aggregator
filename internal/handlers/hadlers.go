@@ -9,16 +9,16 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-func IndexHandler(w http.ResponseWriter, r *http.Request) {
-	var config conf.Config
+func IndexHandler(config conf.Config) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		aggregatedIndex, err := indexer.AggregateIndexes(config)
+		if err != nil {
+			http.Error(w, fmt.Sprintf("Ошибка агрегации индексов: %v", err), http.StatusInternalServerError)
 
-	aggregatedIndex, err := indexer.AggregateIndexes(config)
-	if err != nil {
-		http.Error(w, fmt.Sprintf("Ошибка агрегации индексов: %v", err), http.StatusInternalServerError)
+			return
+		}
 
-		return
+		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+		yaml.NewEncoder(w).Encode(aggregatedIndex)
 	}
-
-	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
-	yaml.NewEncoder(w).Encode(aggregatedIndex)
 }

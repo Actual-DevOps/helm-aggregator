@@ -22,7 +22,7 @@ type Config struct {
 	Port  string     `yaml:"port"`
 }
 
-func LoadConfig(config Config) error {
+func LoadConfig(config *Config) error {
 	viper.SetConfigName("config")
 	viper.SetConfigType("yaml")
 	viper.AddConfigPath(".")

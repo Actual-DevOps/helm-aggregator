@@ -10,10 +10,11 @@ func AggregateIndexes(config conf.Config) (map[string]interface{}, error) {
 
 	for _, repo := range config.Repos {
 		repo.Lock.Lock()
+
 		if repo.Index != nil {
-			if repoIndexEntries, ok := repo.Index["entries"].(map[string]interface{}); ok {
+			if repoIndexEntries, ok := repo.Index["entries"].(map[interface{}]interface{}); ok {
 				for chart, versions := range repoIndexEntries {
-					entries[chart] = versions
+					entries[chart.(string)] = versions
 				}
 			}
 		}

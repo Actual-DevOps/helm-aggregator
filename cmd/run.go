@@ -15,8 +15,7 @@ var runCmd = &cobra.Command{
 	Short: "Run server",
 	Run: func(cmd *cobra.Command, args []string) {
 		var config conf.Config
-
-		if err := conf.LoadConfig(config); err != nil {
+		if err := conf.LoadConfig(&config); err != nil {
 			log.Fatalf("Error loading configuration: %v", err)
 		}
 
@@ -31,9 +30,11 @@ var runCmd = &cobra.Command{
 				}
 			}(&config.Repos[i])
 		}
+
 		wg.Wait()
 
-		http.HandleFunc("/index.yaml", handlers.IndexHandler)
+		http.HandleFunc("/index.yaml", handlers.IndexHandler(config))
+
 		log.Printf("Server run on port %s\n", config.Port)
 		if err := http.ListenAndServe(":"+config.Port, nil); err != nil {
 			log.Fatalf("Run error: %v\n", err)
