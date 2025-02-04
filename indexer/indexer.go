@@ -1,6 +1,9 @@
 package indexer
 
 import (
+	"fmt"
+	"time"
+
 	"github.com/Actual-DevOps/helm-aggregator/internal/conf"
 )
 
@@ -14,7 +17,7 @@ func AggregateIndexes(config conf.Config) (map[string]interface{}, error) {
 		if repo.Index != nil {
 			if repoIndexEntries, ok := repo.Index["entries"].(map[interface{}]interface{}); ok {
 				for chart, versions := range repoIndexEntries {
-					entries[chart.(string)] = versions
+					entries[fmt.Sprintf("%s/%s", repo.Name, chart.(string))] = versions
 				}
 			}
 		}
@@ -23,7 +26,7 @@ func AggregateIndexes(config conf.Config) (map[string]interface{}, error) {
 
 	aggregatedIndex["apiVersion"] = "v1"
 	aggregatedIndex["entries"] = entries
-	aggregatedIndex["generated"] = "2023-10-01T00:00:00Z"
+	aggregatedIndex["generated"] = time.Now().Format(time.RFC3339)
 
 	return aggregatedIndex, nil
 }
