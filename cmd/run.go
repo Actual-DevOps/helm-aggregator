@@ -33,6 +33,9 @@ var runCmd = &cobra.Command{
 
 		wg.Wait()
 
+		http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+			w.Write([]byte("<a href=config>config</a></br><a href=index.yaml>index.yaml</a>"))
+		})
 		http.HandleFunc("/index.yaml", handlers.IndexHandler(config))
 		http.HandleFunc("/config", handlers.GetConfigHandler(config))
 		http.HandleFunc("/healthcheck", func(w http.ResponseWriter, r *http.Request) {
