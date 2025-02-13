@@ -2,9 +2,11 @@
 
 APP=helm-aggregator
 GROUP=actual-devops
-VERSION=0.1.0
+VERSION=$(shell cat version)
 DOCKER_REGISTRY=ghcr.io
 GOLANG_VERSION=1.23.5
+
+BUILD_CMD='GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o helm-aggregator'
 
 all:
 	@echo 'DEFAULT:                                                         '
@@ -17,11 +19,12 @@ lint:
 
 build:
 	go mod download
-	GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o helm-aggregator
+	$(shell echo $(BUILD_CMD))
 
 build_image:
 	@echo 'Build Docker'
 	docker buildx build --build-arg GOLANG_VERSION=$(GOLANG_VERSION) \
+						--build-arg BUILD_CMD=$(BUILD_CMD) \
 						--platform linux/amd64 \
 						-t $(DOCKER_REGISTRY)/$(GROUP)/$(APP):$(VERSION) .
 	docker tag $(DOCKER_REGISTRY)/$(GROUP)/$(APP):$(VERSION) $(DOCKER_REGISTRY)/$(GROUP)/$(APP):latest
