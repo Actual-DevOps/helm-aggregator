@@ -36,12 +36,9 @@ var runCmd = &cobra.Command{
 		http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 			w.Write([]byte("<a href=config>config</a></br><a href=index.yaml>index.yaml</a>"))
 		})
+		http.HandleFunc("/healthcheck", handlers.Healthcheck())
 		http.HandleFunc("/index.yaml", handlers.IndexHandler(config))
 		http.HandleFunc("/config", handlers.GetConfigHandler(config))
-		http.HandleFunc("/healthcheck", func(w http.ResponseWriter, r *http.Request) {
-			w.WriteHeader(http.StatusOK)
-			w.Write([]byte("OK"))
-		})
 
 		log.Printf("Server run on port %s\n", config.Port)
 		if err := http.ListenAndServe(":"+config.Port, nil); err != nil {
