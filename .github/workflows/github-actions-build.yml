@@ -28,6 +28,7 @@ jobs:
           args: --config=.golangci.yml
   buildImage:
     name: Build image
+    needs: [testReport, goLinter]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
