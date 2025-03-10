@@ -13,10 +13,11 @@ const (
 )
 
 type HelmRepo struct {
-	URL   string `yaml:"url"`
-	Name  string `yaml:"name"`
-	Index map[string]any
-	Lock  sync.Mutex
+	URL    string `yaml:"url"`
+	Name   string `yaml:"name"`
+	Charts []any  `yaml:"charts"`
+	Index  map[string]any
+	Lock   sync.Mutex
 }
 
 type Config struct {

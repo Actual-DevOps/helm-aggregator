@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"slices"
 	"time"
 
 	"github.com/Actual-DevOps/helm-aggregator/internal/conf"
 	"gopkg.in/yaml.v2"
 )
-
 
 func AggregateIndexes(config conf.Config) (map[string]any, error) {
 	aggregatedIndex := make(map[string]any)
@@ -62,8 +62,22 @@ func LoadIndex(repo *conf.HelmRepo) error {
 	}
 
 	repo.Lock.Lock()
+
 	defer repo.Lock.Unlock()
+
+	filterByChart(repo, index)
+
 	repo.Index = index
 
 	return nil
+}
+
+func filterByChart(repoCharts *conf.HelmRepo, charts map[string]any) {
+	if entries, ok := charts["entries"].(map[any]any); ok {
+		for remoteChartName := range entries {
+			if !slices.Contains(repoCharts.Charts, remoteChartName) {
+				delete(entries, remoteChartName)
+			}
+		}
+	}
 }
