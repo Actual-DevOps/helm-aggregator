@@ -7,9 +7,9 @@ import (
 	"github.com/Actual-DevOps/helm-aggregator/internal/conf"
 )
 
-func AggregateIndexes(config conf.Config) (map[string]interface{}, error) {
-	aggregatedIndex := make(map[string]interface{})
-	entries := make(map[string]interface{})
+func AggregateIndexes(config conf.Config) (map[string]any, error) {
+	aggregatedIndex := make(map[string]any)
+	entries := make(map[string]any)
 
 	for i := range config.Repos {
 		repo := &config.Repos[i]
@@ -17,7 +17,7 @@ func AggregateIndexes(config conf.Config) (map[string]interface{}, error) {
 		repo.Lock.Lock()
 
 		if repo.Index != nil {
-			if repoIndexEntries, ok := repo.Index["entries"].(map[interface{}]interface{}); ok {
+			if repoIndexEntries, ok := repo.Index["entries"].(map[any]any); ok {
 				for chart, versions := range repoIndexEntries {
 					chart, ok := chart.(string)
 					if !ok {

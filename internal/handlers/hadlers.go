@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/Actual-DevOps/helm-aggregator/indexer"
+	"github.com/Actual-DevOps/helm-aggregator/internal/indexer"
 	"github.com/Actual-DevOps/helm-aggregator/internal/conf"
 	"gopkg.in/yaml.v2"
 )
