@@ -1,14 +1,14 @@
 ARG GOLANG_VERSION
 
-ARG BUILD_CMD
-
 FROM golang:${GOLANG_VERSION} AS builder
+
+ARG BUILD_CMD
 
 WORKDIR /app
 
 COPY . .
 
-RUN go mod download && ${BUILD_CMD}
+RUN go mod download && sh -c ${BUILD_CMD}
 
 FROM alpine:3.20
 
