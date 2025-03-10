@@ -14,7 +14,7 @@ jobs:
           go-version-file: go.mod
       - uses: actions/checkout@master
       - name: Run tests
-        run: go install github.com/becheran/go-testreport@main && go mod download && source .env-test &&
+        run: go install github.com/becheran/go-testreport@main && go mod download &&
              go test ./... -json | go-testreport -vars="Title:Test Report Linux" >> $GITHUB_STEP_SUMMARY
   goLinter:
     name: Golang linter
