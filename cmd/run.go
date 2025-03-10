@@ -8,6 +8,7 @@ import (
 
 	"github.com/Actual-DevOps/helm-aggregator/internal/conf"
 	"github.com/Actual-DevOps/helm-aggregator/internal/handlers"
+	"github.com/Actual-DevOps/helm-aggregator/internal/indexer"
 	"github.com/spf13/cobra"
 )
 
@@ -25,7 +26,7 @@ var runCmd = &cobra.Command{
 			wg.Add(1)
 			go func(repo *conf.HelmRepo) {
 				defer wg.Done()
-				err := repo.LoadIndex()
+				err := indexer.LoadIndex(repo)
 				if err != nil {
 					log.Println(err)
 				}

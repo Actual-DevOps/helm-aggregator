@@ -34,7 +34,7 @@ func GetConfigHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, _ *http.Request) {
 		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 
-		configFile, err := os.ReadFile(os.Getenv("HELM_AGGREGATOR_CONFIG"))
+		configFile, err := os.ReadFile(os.Getenv(conf.HelmAggregatorConfig))
 		if err != nil {
 			http.Error(w, fmt.Sprintf("Can't get config from filesystem: %v", err), http.StatusInternalServerError)
 
