@@ -5,13 +5,13 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/Actual-DevOps/helm-aggregator/internal/indexer"
 	"github.com/Actual-DevOps/helm-aggregator/internal/conf"
+	"github.com/Actual-DevOps/helm-aggregator/internal/indexer"
 	"gopkg.in/yaml.v2"
 )
 
 func IndexHandler(config conf.Config) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, _ *http.Request) {
 		aggregatedIndex, err := indexer.AggregateIndexes(config)
 		if err != nil {
 			http.Error(w, fmt.Sprintf("Can't get aggregatedIndex: %v", err), http.StatusInternalServerError)
@@ -31,7 +31,7 @@ func IndexHandler(config conf.Config) http.HandlerFunc {
 }
 
 func GetConfigHandler() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, _ *http.Request) {
 		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 
 		configFile, err := os.ReadFile(os.Getenv("HELM_AGGREGATOR_CONFIG"))
@@ -51,8 +51,11 @@ func GetConfigHandler() http.HandlerFunc {
 }
 
 func Healthcheck() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("OK"))
+
+		if _, err := w.Write([]byte("OK")); err != nil {
+			http.Error(w, fmt.Sprintf("Can't write healthcheck response: %v", err), http.StatusInternalServerError)
+		}
 	}
 }
