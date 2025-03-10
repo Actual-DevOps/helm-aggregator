@@ -1,0 +1,41 @@
+name: Build helm aggrregator
+run-name: Build helm aggrregator 🚀
+on: [push]
+
+jobs:
+  testReport:
+    name: Test report
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - uses: actions/checkout@master
+      - name: Run tests
+        run: go install github.com/becheran/go-testreport@main && go mod download && source .env-test &&
+             go test ./... -json | go-testreport -vars="Title:Test Report Linux" >> $GITHUB_STEP_SUMMARY
+  goLinter:
+    name: Golang linter
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Golang linter
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: v1.61.0
+          args: --config=.golangci.yml
+  buildImage:
+    name: Build image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Build image
+        run: make build_image
+      - uses: actions/checkout@master
+      - name: Push image
+        if: github.ref == 'refs/heads/master'
+        run: make push_image
+        env:
+          REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
