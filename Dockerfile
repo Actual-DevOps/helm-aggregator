@@ -8,7 +8,7 @@ WORKDIR /app
 
 COPY . .
 
-RUN go mod download && sh -c ${BUILD_CMD}
+RUN go mod download && sh -c "${BUILD_CMD}"
 
 FROM alpine:3.20
 
