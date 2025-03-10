@@ -23,10 +23,14 @@ type Config struct {
 	Port  string     `yaml:"port"`
 }
 
-func LoadConfig(config *Config) error {
+func setDefaulConfigPath() {
 	if os.Getenv("HELM_AGGREGATOR_CONFIG") == "" {
 		os.Setenv("HELM_AGGREGATOR_CONFIG", "config.yaml")
 	}
+}
+
+func LoadConfig(config *Config) error {
+	setDefaulConfigPath()
 
 	viper.SetConfigFile(os.Getenv("HELM_AGGREGATOR_CONFIG"))
 	viper.SetConfigType("yaml")
