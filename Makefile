@@ -5,6 +5,7 @@ GROUP=actual-devops
 VERSION=$(shell cat version)
 DOCKER_REGISTRY=ghcr.io
 GOLANG_VERSION=1.23.5
+REGISTRY_USER=actual-devops
 
 BUILD_CMD='GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o helm-aggregator'
 
