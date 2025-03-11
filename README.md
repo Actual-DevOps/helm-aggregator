@@ -14,6 +14,12 @@ Config file config.yaml
 repos:
   - name: wiremind
     url: https://wiremind.github.io/wiremind-helm-charts
-
+    charts:
+      - karma
+  - name: aquasecurity
+    url: https://aquasecurity.github.io/helm-charts
+    charts:
+      - trivy
+      - trivy-operator
 port: "8080"
 ```
