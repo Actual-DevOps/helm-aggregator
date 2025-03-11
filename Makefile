@@ -27,8 +27,10 @@ build_image:
 						--build-arg BUILD_CMD=$(BUILD_CMD) \
 						--platform linux/amd64 \
 						-t $(DOCKER_REGISTRY)/$(GROUP)/$(APP):$(VERSION) .
-	docker tag $(DOCKER_REGISTRY)/$(GROUP)/$(APP):$(VERSION) $(DOCKER_REGISTRY)/$(GROUP)/$(APP):latest
 
 push_image:
+ifeq ($(CI), true)
+	echo $(REGISTRY_TOKEN) | docker login $(DOCKER_REGISTRY) -u $(REGISTRY_USER) --password-stdin
+	docker logout
+endif
 	docker push $(DOCKER_REGISTRY)/$(GROUP)/$(APP):$(VERSION)
-	docker push $(DOCKER_REGISTRY)/$(GROUP)/$(APP):latest
