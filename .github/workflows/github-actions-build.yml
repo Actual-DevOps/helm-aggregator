@@ -39,7 +39,7 @@ jobs:
         run: make build_image
       - uses: actions/checkout@master
       - name: Push image
-        # if: github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/master'
         run: make push_image
         env:
           REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
