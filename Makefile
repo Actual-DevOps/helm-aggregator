@@ -5,6 +5,7 @@ GROUP=actual-devops
 VERSION=$(shell cat version)
 DOCKER_REGISTRY=ghcr.io
 GOLANG_VERSION=1.23.5
+REGISTRY_USER=actual-devops
 
 BUILD_CMD='GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o helm-aggregator'
 
@@ -31,6 +32,7 @@ build_image:
 push_image:
 ifeq ($(CI), true)
 	echo $(REGISTRY_TOKEN) | docker login $(DOCKER_REGISTRY) -u $(REGISTRY_USER) --password-stdin
+	docker push $(DOCKER_REGISTRY)/$(GROUP)/$(APP):$(VERSION)
 	docker logout
 endif
 	docker push $(DOCKER_REGISTRY)/$(GROUP)/$(APP):$(VERSION)
