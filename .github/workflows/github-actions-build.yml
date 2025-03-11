@@ -2,6 +2,8 @@ name: Build helm aggrregator
 run-name: Build helm aggrregator 🚀
 on: [push]
 
+permissions: write-all
+
 jobs:
   testReport:
     name: Test report
