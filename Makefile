@@ -7,7 +7,7 @@ DOCKER_REGISTRY=ghcr.io
 GOLANG_VERSION=1.23.5
 REGISTRY_USER=actual-devops
 
-BUILD_CMD='GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o helm-aggregator'
+BUILD_CMD='CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o helm-aggregator'
 
 all:
 	@echo 'DEFAULT:                                                         '
