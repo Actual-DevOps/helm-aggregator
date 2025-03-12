@@ -30,4 +30,4 @@ VOLUME ["/app/config"]
 
 USER app
 
-CMD ["./helm-aggregator", "run"]
+CMD ["/app/helm-aggregator", "run"]
